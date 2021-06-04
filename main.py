@@ -33,7 +33,7 @@ async def on_ready():
 @bot.command()
 async def top(ctx):
     subreddit1 = await reddit.subreddit("bapcsalescanada")
-    for post1 in subreddit1.new(limit=10):
+    async for post1 in subreddit1.new(limit=10):
         await ctx.send(post1.title)
 
 
@@ -41,7 +41,7 @@ async def top(ctx):
 async def gettopfewposts():
     postList.clear()
     subreddit = await reddit.subreddit("bapcsalescanada")
-    for post in subreddit.new(limit=10):  # initial list
+    async for post in subreddit.new(limit=10):  # initial list
         p = post.title
         for i in range(len(myComponents)):
             if p.find(myComponents[i]) >= 0:
