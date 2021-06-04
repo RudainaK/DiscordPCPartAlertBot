@@ -33,6 +33,11 @@ async def on_ready():
 
 
 @bot.command()
+async def test(ctx):
+    await ctx.send("works")
+
+
+@bot.command()
 async def top(ctx):
     subreddit1 = await reddit.subreddit("bapcsalescanada")
     async for post1 in subreddit1.new(limit=1):
