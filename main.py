@@ -14,10 +14,10 @@ reddit = asyncpraw.Reddit(  # reddit authentication stuff
     user_agent="r_name",
     username="usrname", 
 )
+
 reddit.read_only = True
 
 myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'NVMe']  # list of components needed
-subreddit = reddit.subreddit("bapcsalescanada")
 postList = []
 
 bot = commands.Bot(command_prefix="-")  # discord command prefix
@@ -41,6 +41,7 @@ async def test(ctx):
 async def top(ctx):
     subreddit1 = await reddit.subreddit("bapcsalescanada")
     async for post1 in subreddit1.new(limit=1):
+        print(post1.title)
         await ctx.send(post1.title)
 
 
@@ -61,6 +62,6 @@ async def gettopfewposts():
         update_channel = bot.get_channel(UPDATE_CHANNEL_ID)
         await update_channel.send(msgL)
 
-gettopfewposts()
+gettopfewposts.start()
 
 bot.run(token)
