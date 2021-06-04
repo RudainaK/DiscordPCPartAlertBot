@@ -3,20 +3,15 @@ import discord
 from discord.ext import commands
 from discord.ext import tasks
 import datetime
-import praw
+import asyncpraw
 
 token = os.getenv("TOKEN")
 
-reddit = praw.Reddit(  # reddit authentication stuff
+reddit = asyncpraw.Reddit(  # reddit authentication stuff
     client_id='r_id',
     client_secret='r_secret',
     user_agent='<r_name:1.0>'
 )
-
-
-def gettopost():
-    for post1 in subreddit.new(limit=10):
-        return post1.title
 
 
 myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'NVMe']  # list of components needed
@@ -37,13 +32,15 @@ async def on_ready():
 
 @bot.command()
 async def top(ctx):
-    topPost = gettopost()
-    await ctx.send(topPost)
+    subreddit1 = await reddit.subreddit("bapcsalescanada")
+    for post1 in subreddit1.new(limit=10):
+        await ctx.send(post1.title)
 
 
 @tasks.loop(minutes=15)  # every 15 min do the following
 async def gettopfewposts():
     postList.clear()
+    subreddit = await reddit.subreddit("bapcsalescanada")
     for post in subreddit.new(limit=10):  # initial list
         p = post.title
         for i in range(len(myComponents)):
