@@ -10,11 +10,11 @@ token = os.getenv("TOKEN")
 reddit = asyncpraw.Reddit(  # reddit authentication stuff
     client_id='r_id',
     client_secret='r_secret',
-    user_agent='<r_name:1.0>',
     password='passwd',
+    user_agent='<r_name:1.0>',
     username='usrname',
 )
-
+reddit.read_only = True
 
 myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'NVMe']  # list of components needed
 subreddit = reddit.subreddit("bapcsalescanada")
