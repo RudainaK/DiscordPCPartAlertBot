@@ -13,7 +13,7 @@ reddit = asyncpraw.Reddit(  # reddit authentication stuff
     password="passwd",
     user_agent="r_name",
     username="usrname", 
-)
+) 
 
 reddit.read_only = True
 
