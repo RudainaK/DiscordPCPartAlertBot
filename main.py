@@ -63,6 +63,7 @@ async def gettopfewposts():
         bot.wait_until_ready()
         print("test, id: ", int(os.getenv("UPDATE_CHANNEL_ID")))
         update_channel = bot.get_channel(int(os.getenv("UPDATE_CHANNEL_ID")))
+        print("update channel is type: ", type(update_channel))
         await update_channel.send(msgL)
 
 
