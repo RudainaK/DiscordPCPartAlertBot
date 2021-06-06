@@ -5,14 +5,14 @@ from discord.ext import tasks
 import datetime
 import asyncpraw
 
-# token = os.getenv("TOKEN")
+token = os.getenv("TOKEN")
 
 reddit = asyncpraw.Reddit(  # reddit authentication stuff
-    client_id="r_id",
-    client_secret="r_secret",
-    password="passwd",
-    user_agent="r_name",
-    username="usrname"
+    client_id=os.getenv("r_id"),
+    client_secret=os.getenv("r_secret"),
+    password=os.getenv("passwd"),
+    user_agent=os.getenv("r_name"),
+    username=os.getenv("usrname"),
 ) 
 
 reddit.read_only = True
@@ -64,4 +64,4 @@ async def gettopfewposts():
 
 gettopfewposts.start()
 
-bot.run("TOKEN")
+bot.run(token)
