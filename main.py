@@ -60,7 +60,7 @@ async def gettopfewposts():
         finalList = list(dict.fromkeys(postList))  # gets rid of accidental duplicates
         msgL = '\n'.join(finalList)
         bot.wait_until_ready()
-        update_channel = bot.get_channel(os.getenv("UPDATE_CHANNEL_ID"))
+        update_channel = bot.get_channel(int(os.getenv("UPDATE_CHANNEL_ID")))
         await update_channel.send(msgL)
 
 gettopfewposts.start()
