@@ -5,7 +5,7 @@ from discord.ext import tasks
 import datetime
 import asyncpraw
 
-token = os.getenv("TOKEN")
+# token = os.getenv("TOKEN")
 
 reddit = asyncpraw.Reddit(  # reddit authentication stuff
     client_id="r_id",
@@ -64,4 +64,4 @@ async def gettopfewposts():
 
 gettopfewposts.start()
 
-bot.run(token)
+bot.run("TOKEN")
