@@ -38,6 +38,11 @@ async def test(ctx):
 
 
 @bot.command()
+async def stop(ctx):
+    await bot.close()
+
+
+@bot.command()
 async def top(ctx):
     subreddit1 = await reddit.subreddit("bapcsalescanada")
     async for post1 in subreddit1.new(limit=1):
