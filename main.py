@@ -38,7 +38,7 @@ async def test(ctx):
 
 
 @bot.command()
-async def stop(ctx):
+async def stop():
     await bot.close()
 
 
