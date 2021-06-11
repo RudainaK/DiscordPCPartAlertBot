@@ -18,6 +18,7 @@ reddit = asyncpraw.Reddit(  # reddit authentication stuff
 reddit.read_only = True
 
 myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'NVMe']  # list of components needed
+sadFlairs = ['oos', 'expired', 'sold out']  # a lot can happen in 15 min 
 postList = []
 
 bot = commands.Bot(command_prefix="!")  # discord command prefix
@@ -42,8 +43,6 @@ async def stop(ctx):
 async def top(ctx):
     subreddit1 = await reddit.subreddit("bapcsalescanada")
     async for post1 in subreddit1.new(limit=1):
-        print(post1.title)
-        await ctx.send("ha")
         await ctx.send(post1.title)
 
 
@@ -51,22 +50,28 @@ async def top(ctx):
 async def gettopfewposts():
     postList.clear()
     subreddit = await reddit.subreddit("bapcsalescanada")
+    
     async for post in subreddit.new(limit=10):  # initial list
-        p = post.title
-        for i in range(len(myComponents)):
-            if p.find(myComponents[i]) >= 0:
-                postList.append(post.title)
-                # print(post.title)
+        valid = True
+        f = post.link_flair_text
+        if len(f) > 0: 
+            f.lower()  # make lower case
+            for sad in range(len(sadFlairs)):
+                if f.find(sadFlairs[sad]) >= 0:  # if the flair indicates the item is no longer available
+                    valid = False 
+                    break                        # no point in continuing
+        if valid == True:
+            p = post.title
+            for i in range(len(myComponents)):
+                if p.find(myComponents[i]) >= 0:
+                    postList.append(post.title)
+                    # print(post.title)
 
     if len(postList) > 0:
         finalList = list(dict.fromkeys(postList))  # gets rid of accidental duplicates
         msgL = '\n'.join(finalList)
-        bot.wait_until_ready()
-        print("test, id: ", int(os.getenv("UPDATE_CHANNEL_ID")))
-        print("id before cast is of type: ", type(os.getenv("UPDATE_CHANNEL_ID")))
-        print("id before cast is of type: ", type(int(os.getenv("UPDATE_CHANNEL_ID"))))
+        await bot.wait_until_ready()
         update_channel = bot.get_channel(int(os.getenv("UPDATE_CHANNEL_ID")))
-        print("update channel is type: ", type(update_channel))
         await update_channel.send(msgL)
 
 
