@@ -54,7 +54,7 @@ async def gettopfewposts():
     async for post in subreddit.new(limit=10):  # initial list
         valid = True
         f = post.link_flair_text
-        if len(f) > 0: 
+        if f != None: 
             f.lower()  # make lower case
             for sad in range(len(sadFlairs)):
                 if f.find(sadFlairs[sad]) >= 0:  # if the flair indicates the item is no longer available
