@@ -17,7 +17,19 @@ reddit = asyncpraw.Reddit(  # reddit authentication stuff
 
 reddit.read_only = True
 
-myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'NVMe']  # list of components needed
+# TO-DO:
+# Change 15 min updates to 15 min specific updates
+# Add 'general hourly update' that does the old 15 min function but every hour 
+# update both so that they send embedded links instead of just post titles
+# add a general !check ____ function that looks at the top 10 posts and sees if the provided ____ 
+#keyword is there 
+
+RAM_parameters = ['CL16', '2x8GB', '3600 MHz']
+GPU_parameters = ['3060 Ti']
+SSD_parameters = ['500GB', 'NVMe']
+
+
+myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'MOBO']  #general list of components needed
 sadFlairs = ['oos', 'expired', 'sold out']  # a lot can happen in 15 min 
 postList = []
 
@@ -27,6 +39,11 @@ bot = commands.Bot(command_prefix="!")  # discord command prefix
 @bot.event
 async def on_ready():
     print("Ready to find pc parts for hopefully not trash prices!")
+
+
+@bot.command()
+async def GoodBot(ctx):
+    await ctx.send(":)")
 
 
 @bot.command()
@@ -46,8 +63,22 @@ async def top(ctx):
         await ctx.send(post1.title)
 
 
-@tasks.loop(minutes=15)  # every 15 min do the following
-async def gettopfewposts():
+@bot.command()
+async def toplink(ctx):
+    subredditT = await reddit.subreddit("bapcsalescanada")
+    async for postT in subredditT.new(limit=1):
+        await ctx.send(postT.url)
+
+
+# @bot.command()
+# async def check(ctx, arg):
+#     subreddit2 = await reddit.subreddit("bapcsalescanada")
+#     async for post2 in subreddit2.new(limit=10):  # check the first 10 posts in new with keyword
+#         p = post2.title
+
+
+@tasks.loop(minutes=60)  # every hour do the following
+async def Generalgettopfewposts():
     postList.clear()
     subreddit = await reddit.subreddit("bapcsalescanada")
     
@@ -75,6 +106,6 @@ async def gettopfewposts():
         await update_channel.send(msgL)
 
 
-gettopfewposts.start()
+Generalgettopfewposts.start()
 
 bot.run(token)
