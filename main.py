@@ -66,8 +66,11 @@ async def top(ctx):
 @bot.command()
 async def toplink(ctx):
     subredditT = await reddit.subreddit("bapcsalescanada")
+    embeddedLink = discord.Embed()
     async for postT in subredditT.new(limit=1):
-        await ctx.send(postT.url)
+        embeddedLink.url = postT.url
+        embeddedLink.title = postT.title
+        await ctx.send(embed=embeddedLink)
 
 
 # @bot.command()
