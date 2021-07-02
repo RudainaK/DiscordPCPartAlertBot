@@ -45,7 +45,7 @@ async def on_ready():
 
 
 @bot.command()
-async def help(ctx):
+async def getHelp(ctx):
     await ctx.send("Hello!\nThe command prefix is '!'\nHere is a list of commands that may be helpful:\nhelp: gives info on commands\ntoplink: returns top post in new\ncheck: searches for posts with a given keyword\nGoodBot: I respond with a :)\n\nNote that I return embedded links\n\nThere are also two background processes that check for selected keywords every hour (a general search) and one every 15 minutes (specific)")  # there is probably a better way to format this
 
 
