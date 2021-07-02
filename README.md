@@ -8,7 +8,8 @@ In addition to the every 15 minutes notification, there are a few other commands
 
 | Command | With proper formatting | What it does                                                     |
 |---------|------------------------|------------------------------------------------------------------|
-|top      |!top                    |sends the current top post in the new section                     |
+|toplink  |!toplink                |sends the current top post in the new section                     |
+|GoodBot  |!GoodBot                |sends ':)' to the channel                                         |
 |test     |!test                   |sends 'works' to the channel. Used to test if the bot is connected|
 |stop     |!stop                   |Technically supposed to take the bot offline when updating on heroku, otherwise it crashes after restarting before starting up again due to a previously unclosed connection. Still doesn't work perfectly|
 

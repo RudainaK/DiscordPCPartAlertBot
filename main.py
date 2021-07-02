@@ -1,5 +1,7 @@
 import os
+from typing import final
 import discord
+from discord.embeds import Embed
 from discord.ext import commands
 from discord.ext import tasks
 import datetime
@@ -32,6 +34,7 @@ SSD_parameters = ['500GB', 'NVMe']
 myComponents = ['GPU', 'HDD', 'SSD', 'PSU', 'RAM', 'MOBO']  #general list of components needed
 sadFlairs = ['oos', 'expired', 'sold out']  # a lot can happen in 15 min 
 postList = []
+postListS = []
 
 bot = commands.Bot(command_prefix="!")  # discord command prefix
 
@@ -39,6 +42,11 @@ bot = commands.Bot(command_prefix="!")  # discord command prefix
 @bot.event
 async def on_ready():
     print("Ready to find pc parts for hopefully not trash prices!")
+
+
+@bot.command()
+async def help(ctx):
+    await ctx.send("Hello!\nThe command prefix is '!'\nHere is a list of commands that may be helpful:\nhelp: gives info on commands\ntoplink: returns top post in new\ncheck: searches for posts with a given keyword\nGoodBot: I respond with a :)\n\nNote that I return embedded links\n\nThere are also two background processes that check for selected keywords every hour (a general search) and one every 15 minutes (specific)")  # there is probably a better way to format this
 
 
 @bot.command()
@@ -80,7 +88,7 @@ async def toplink(ctx):
 #         p = post2.title
 
 
-@tasks.loop(minutes=60)  # every hour do the following
+@tasks.loop(minutes=3)  # every hour do the following
 async def Generalgettopfewposts():
     postList.clear()
     subreddit = await reddit.subreddit("bapcsalescanada")
@@ -90,23 +98,57 @@ async def Generalgettopfewposts():
         f = post.link_flair_text
         if f != None: 
             f.lower()  # make lower case
+            print(f)  # for testing 
             for sad in range(len(sadFlairs)):
                 if f.find(sadFlairs[sad]) >= 0:  # if the flair indicates the item is no longer available
                     valid = False 
                     break                        # no point in continuing
         if valid == True:
-            p = post.title
+            p = post
             for i in range(len(myComponents)):
                 if p.find(myComponents[i]) >= 0:
-                    postList.append(post.title)
+                    postList.append(str(post.id))  # storing post by id 
                     # print(post.title)
 
     if len(postList) > 0:
         finalList = list(dict.fromkeys(postList))  # gets rid of accidental duplicates
-        msgL = '\n'.join(finalList)
-        await bot.wait_until_ready()
-        update_channel = bot.get_channel(int(os.getenv("UPDATE_CHANNEL_ID")))
-        await update_channel.send(msgL)
+        for finalPost in range(len(finalList)):
+            await bot.wait_until_ready()
+            update_channel = bot.get_channel(int(os.getenv("UPDATE_CHANNEL_ID")))
+            embeddedPostG = discord.Embed()
+            postInf = reddit.submission(id = finalPost)
+            embeddedPostG.title = postInf.title
+            embeddedPostG.url = postInf.url
+            await update_channel.send(embed=embeddedPostG)
+
+
+# @tasks.loop(minutes=15)  # every 15 do the following
+# async def Specificgettopfewposts():
+#    postListS.clear()
+#    subreddit = await reddit.subreddit("bapcsalescanada")
+    
+#    async for post in subreddit.new(limit=10):  # initial list
+#        valid = True
+#        fS = post.link_flair_text
+#        if fS != None: 
+#            fS.lower()  # make lower case
+#            for sad in range(len(sadFlairs)):
+#                if fS.find(sadFlairs[sad]) >= 0:  # if the flair indicates the item is no longer available
+#                    valid = False 
+#                     break                        # no point in continuing
+#       if valid == True:
+#           p = post.title
+#            for i in range(len(myComponents)):
+#                if p.find(myComponents[i]) >= 0:
+#                    postListS.append(post.title)
+                    # print(post.title)
+
+#    if len(postList) > 0:
+#        finalListS = list(dict.fromkeys(postListS))  # gets rid of accidental duplicates
+#        msgLS = '\n'.join(finalListS)
+#        await bot.wait_until_ready()
+#        update_channel = bot.get_channel(int(os.getenv("QUARTERLY_CHANNEL_ID")))
+#        await update_channel.send(msgLS)
 
 
 Generalgettopfewposts.start()
